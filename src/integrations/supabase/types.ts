@@ -14,7 +14,134 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      profiles: {
+        Row: {
+          created_at: string
+          full_name: string | null
+          id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          full_name?: string | null
+          id?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          full_name?: string | null
+          id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      rsvp_responses: {
+        Row: {
+          attendance_status: string
+          created_at: string
+          guest_email: string | null
+          guest_name: string
+          guest_phone: string | null
+          id: string
+          invitation_id: string
+          message: string | null
+          number_of_guests: number | null
+        }
+        Insert: {
+          attendance_status: string
+          created_at?: string
+          guest_email?: string | null
+          guest_name: string
+          guest_phone?: string | null
+          id?: string
+          invitation_id: string
+          message?: string | null
+          number_of_guests?: number | null
+        }
+        Update: {
+          attendance_status?: string
+          created_at?: string
+          guest_email?: string | null
+          guest_name?: string
+          guest_phone?: string | null
+          id?: string
+          invitation_id?: string
+          message?: string | null
+          number_of_guests?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "rsvp_responses_invitation_id_fkey"
+            columns: ["invitation_id"]
+            isOneToOne: false
+            referencedRelation: "wedding_invitations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      wedding_invitations: {
+        Row: {
+          additional_info: string | null
+          bride_name: string
+          bride_photo_url: string | null
+          created_at: string
+          groom_name: string
+          groom_photo_url: string | null
+          id: string
+          is_published: boolean | null
+          music_choice: number | null
+          slug: string | null
+          template_id: number | null
+          updated_at: string
+          user_id: string
+          venue_address: string | null
+          venue_name: string | null
+          wedding_date: string
+          wedding_time: string | null
+        }
+        Insert: {
+          additional_info?: string | null
+          bride_name: string
+          bride_photo_url?: string | null
+          created_at?: string
+          groom_name: string
+          groom_photo_url?: string | null
+          id?: string
+          is_published?: boolean | null
+          music_choice?: number | null
+          slug?: string | null
+          template_id?: number | null
+          updated_at?: string
+          user_id: string
+          venue_address?: string | null
+          venue_name?: string | null
+          wedding_date: string
+          wedding_time?: string | null
+        }
+        Update: {
+          additional_info?: string | null
+          bride_name?: string
+          bride_photo_url?: string | null
+          created_at?: string
+          groom_name?: string
+          groom_photo_url?: string | null
+          id?: string
+          is_published?: boolean | null
+          music_choice?: number | null
+          slug?: string | null
+          template_id?: number | null
+          updated_at?: string
+          user_id?: string
+          venue_address?: string | null
+          venue_name?: string | null
+          wedding_date?: string
+          wedding_time?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
