@@ -67,6 +67,7 @@ const CreateInvitation = () => {
     e.preventDefault();
     if (!user) return;
 
+    console.log('Starting form submission...');
     setLoading(true);
     
     try {
@@ -88,24 +89,29 @@ const CreateInvitation = () => {
         is_published: publish
       };
 
+      console.log('Invitation data to insert:', invitationData);
+
       const { data, error } = await supabase
         .from('wedding_invitations')
         .insert([invitationData])
         .select()
         .single();
 
+      console.log('Supabase response:', { data, error });
+
       if (error) throw error;
 
       toast({
-        title: t('common.success'),
-        description: publish ? "Undangan berhasil dibuat dan dipublikasikan!" : t('message.success.created'),
+        title: "Berhasil",
+        description: publish ? "Undangan berhasil dibuat dan dipublikasikan!" : "Undangan berhasil dibuat!",
       });
 
       navigate('/dashboard');
     } catch (error: any) {
+      console.error('Form submission error:', error);
       toast({
-        title: t('common.error'),
-        description: t('message.error.createInvitation'),
+        title: "Error",
+        description: "Gagal membuat undangan: " + error.message,
         variant: "destructive"
       });
     } finally {
