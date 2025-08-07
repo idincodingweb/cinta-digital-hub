@@ -4,10 +4,12 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useNavigate } from 'react-router-dom';
 import { Heart, ArrowRight, Sparkles, Users, Camera } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const Index = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   React.useEffect(() => {
     if (user) {
@@ -18,23 +20,23 @@ const Index = () => {
   const features = [
     {
       icon: <Heart className="w-6 h-6" />,
-      title: "Elegant Templates",
-      description: "Choose from 10 beautiful wedding invitation templates"
+      title: t('features.templates.title'),
+      description: t('features.templates.description')
     },
     {
       icon: <Camera className="w-6 h-6" />,
-      title: "Photo Upload",
-      description: "Upload photos of the bride and groom to personalize your invitation"
+      title: t('features.photos.title'),
+      description: t('features.photos.description')
     },
     {
       icon: <Sparkles className="w-6 h-6" />,
-      title: "Romantic Animations",
-      description: "Beautiful animations and transitions for an unforgettable experience"
+      title: t('features.animations.title'),
+      description: t('features.animations.description')
     },
     {
       icon: <Users className="w-6 h-6" />,
-      title: "RSVP Management",
-      description: "Easily manage guest responses and track attendance"
+      title: t('features.rsvp.title'),
+      description: t('features.rsvp.description')
     }
   ];
 
@@ -50,14 +52,12 @@ const Index = () => {
               </div>
             </div>
             <h1 className="text-5xl md:text-7xl font-wedding-serif text-white leading-tight">
-              Beautiful Wedding
+              {t('hero.title')}
               <br />
-              <span className="font-wedding-script">Invitations</span>
+              <span className="font-wedding-script">{t('hero.subtitle')}</span>
             </h1>
             <p className="text-xl text-white/90 max-w-2xl mx-auto leading-relaxed">
-              Create stunning digital wedding invitations with elegant designs, 
-              romantic animations, and beautiful music. Share your special day 
-              with loved ones through personalized invitation links.
+              {t('hero.description')}
             </p>
           </div>
           
@@ -67,7 +67,7 @@ const Index = () => {
               size="lg"
               className="wedding-button-hover bg-white text-primary hover:bg-white/90 border-0 shadow-glow font-medium px-8 py-3"
             >
-              Get Started
+              {t('hero.getStarted')}
               <ArrowRight className="w-5 h-5 ml-2" />
             </Button>
             <Button
@@ -76,7 +76,7 @@ const Index = () => {
               variant="outline"
               className="border-white/30 text-white hover:bg-white/10 backdrop-blur-sm font-medium px-8 py-3"
             >
-              View Demo
+              {t('hero.viewDemo')}
             </Button>
           </div>
         </div>
@@ -110,10 +110,10 @@ const Index = () => {
         <Card className="bg-white/95 backdrop-blur-sm border-0 shadow-romantic animate-fade-in-up">
           <CardHeader className="text-center space-y-4">
             <CardTitle className="text-3xl font-wedding-serif romantic-text-gradient">
-              Ready to Create Your Dream Invitation?
+              {t('hero.cta.title')}
             </CardTitle>
             <CardDescription className="text-lg">
-              Join thousands of couples who have chosen our platform for their special day
+              {t('hero.cta.description')}
             </CardDescription>
           </CardHeader>
           <CardContent className="text-center">
@@ -122,7 +122,7 @@ const Index = () => {
               size="lg"
               className="wedding-button-hover bg-gradient-romantic border-0 text-primary-foreground font-medium px-12 py-3"
             >
-              Create Your Invitation
+              {t('hero.cta.button')}
               <Heart className="w-5 h-5 ml-2" />
             </Button>
           </CardContent>

@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/components/ui/use-toast';
+import { useTranslation } from 'react-i18next';
 
 interface AuthContextType {
   user: User | null;
@@ -27,6 +28,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
+  const { t } = useTranslation();
 
   useEffect(() => {
     // Set up auth state listener
@@ -64,14 +66,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     if (error) {
       toast({
-        title: "Error",
+        title: t('common.error'),
         description: error.message,
         variant: "destructive"
       });
     } else {
       toast({
-        title: "Success",
-        description: "Check your email to confirm your account!",
+        title: t('common.success'),
+        description: t('message.success.signUp'),
       });
     }
 
@@ -86,14 +88,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     if (error) {
       toast({
-        title: "Error",
+        title: t('common.error'),
         description: error.message,
         variant: "destructive"
       });
     } else {
       toast({
-        title: "Welcome back!",
-        description: "Successfully signed in.",
+        title: t('message.success.signIn'),
+        description: "Berhasil masuk.",
       });
     }
 
@@ -104,8 +106,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const { error } = await supabase.auth.signOut();
     if (!error) {
       toast({
-        title: "Signed out",
-        description: "You have been signed out successfully.",
+        title: "Keluar",
+        description: t('message.success.signOut'),
       });
     }
   };

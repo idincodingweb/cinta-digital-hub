@@ -7,11 +7,13 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 
 const AuthForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { signIn, signUp, user } = useAuth();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   // Redirect authenticated users to dashboard
   useEffect(() => {
@@ -59,23 +61,23 @@ const AuthForm = () => {
               <span className="text-2xl">💕</span>
             </div>
             <CardTitle className="text-2xl font-wedding-serif romantic-text-gradient">
-              Wedding Invitations
+              {t('auth.title')}
             </CardTitle>
             <CardDescription className="text-muted-foreground">
-              Create beautiful digital wedding invitations
+              {t('auth.description')}
             </CardDescription>
           </CardHeader>
           <CardContent>
             <Tabs defaultValue="signin" className="w-full">
               <TabsList className="grid w-full grid-cols-2 mb-6">
-                <TabsTrigger value="signin" className="transition-romantic">Sign In</TabsTrigger>
-                <TabsTrigger value="signup" className="transition-romantic">Sign Up</TabsTrigger>
+                <TabsTrigger value="signin" className="transition-romantic">{t('auth.signin')}</TabsTrigger>
+                <TabsTrigger value="signup" className="transition-romantic">{t('auth.signup')}</TabsTrigger>
               </TabsList>
               
               <TabsContent value="signin">
                 <form onSubmit={handleSignIn} className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="signin-email">Email</Label>
+                    <Label htmlFor="signin-email">{t('auth.email')}</Label>
                     <Input
                       id="signin-email"
                       name="signin-email"
@@ -86,7 +88,7 @@ const AuthForm = () => {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="signin-password">Password</Label>
+                    <Label htmlFor="signin-password">{t('auth.password')}</Label>
                     <Input
                       id="signin-password"
                       name="signin-password"
@@ -100,7 +102,7 @@ const AuthForm = () => {
                     className="w-full wedding-button-hover bg-gradient-romantic border-0 text-primary-foreground font-medium"
                     disabled={isLoading}
                   >
-                    {isLoading ? 'Signing in...' : 'Sign In'}
+                    {isLoading ? t('auth.signingIn') : t('auth.signin')}
                   </Button>
                 </form>
               </TabsContent>
@@ -108,18 +110,18 @@ const AuthForm = () => {
               <TabsContent value="signup">
                 <form onSubmit={handleSignUp} className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="signup-fullname">Full Name</Label>
+                    <Label htmlFor="signup-fullname">{t('auth.fullName')}</Label>
                     <Input
                       id="signup-fullname"
                       name="signup-fullname"
                       type="text"
-                      placeholder="Your full name"
+                      placeholder="Nama lengkap Anda"
                       required
                       className="transition-romantic"
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="signup-email">Email</Label>
+                    <Label htmlFor="signup-email">{t('auth.email')}</Label>
                     <Input
                       id="signup-email"
                       name="signup-email"
@@ -130,7 +132,7 @@ const AuthForm = () => {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="signup-password">Password</Label>
+                    <Label htmlFor="signup-password">{t('auth.password')}</Label>
                     <Input
                       id="signup-password"
                       name="signup-password"
@@ -144,7 +146,7 @@ const AuthForm = () => {
                     className="w-full wedding-button-hover bg-gradient-romantic border-0 text-primary-foreground font-medium"
                     disabled={isLoading}
                   >
-                    {isLoading ? 'Creating account...' : 'Create Account'}
+                    {isLoading ? t('auth.creatingAccount') : t('auth.createAccount')}
                   </Button>
                 </form>
               </TabsContent>

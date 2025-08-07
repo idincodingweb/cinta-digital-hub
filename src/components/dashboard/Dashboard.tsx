@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/components/ui/use-toast';
 import { Plus, Eye, Edit, Trash2, LogOut, Heart } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 interface WeddingInvitation {
   id: string;
@@ -24,6 +25,7 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (!user) {
@@ -44,8 +46,8 @@ const Dashboard = () => {
       setInvitations(data || []);
     } catch (error: any) {
       toast({
-        title: "Error",
-        description: "Failed to load your invitations",
+        title: t('common.error'),
+        description: t('message.error.loadInvitations'),
         variant: "destructive"
       });
     } finally {
@@ -54,7 +56,7 @@ const Dashboard = () => {
   };
 
   const handleDeleteInvitation = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this invitation?')) return;
+    if (!confirm(t('confirm.delete'))) return;
 
     try {
       const { error } = await supabase
@@ -66,13 +68,13 @@ const Dashboard = () => {
 
       setInvitations(prev => prev.filter(inv => inv.id !== id));
       toast({
-        title: "Success",
-        description: "Invitation deleted successfully"
+        title: t('common.success'),
+        description: t('message.success.deleted')
       });
     } catch (error: any) {
       toast({
-        title: "Error",
-        description: "Failed to delete invitation",
+        title: t('common.error'),
+        description: t('message.error.deleteInvitation'),
         variant: "destructive"
       });
     }
@@ -100,10 +102,10 @@ const Dashboard = () => {
         <div className="flex justify-between items-center mb-8 animate-fade-in-up">
           <div>
             <h1 className="text-4xl font-wedding-serif romantic-text-gradient mb-2">
-              My Wedding Invitations
+              {t('dashboard.title')}
             </h1>
             <p className="text-muted-foreground">
-              Welcome back, {user?.user_metadata?.full_name || user?.email}
+              {t('dashboard.welcome')} {user?.user_metadata?.full_name || user?.email}
             </p>
           </div>
           <div className="flex gap-3">
@@ -112,7 +114,7 @@ const Dashboard = () => {
               variant="outline"
               className="wedding-button-hover"
             >
-              About
+              {t('dashboard.about')}
             </Button>
             <Button
               onClick={handleSignOut}
@@ -120,7 +122,7 @@ const Dashboard = () => {
               className="wedding-button-hover"
             >
               <LogOut className="w-4 h-4 mr-2" />
-              Sign Out
+              {t('dashboard.signOut')}
             </Button>
           </div>
         </div>
@@ -130,10 +132,10 @@ const Dashboard = () => {
           <CardHeader>
             <CardTitle className="flex items-center gap-2 font-wedding-serif">
               <Heart className="w-5 h-5 text-primary" />
-              Create New Invitation
+              {t('dashboard.createNew.title')}
             </CardTitle>
             <CardDescription>
-              Start creating your beautiful wedding invitation
+              {t('dashboard.createNew.description')}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -142,7 +144,7 @@ const Dashboard = () => {
               className="wedding-button-hover bg-gradient-romantic border-0 text-primary-foreground"
             >
               <Plus className="w-4 h-4 mr-2" />
-              Create New Invitation
+              {t('dashboard.createNew.button')}
             </Button>
           </CardContent>
         </Card>
@@ -164,7 +166,7 @@ const Dashboard = () => {
                     variant={invitation.is_published ? "default" : "secondary"}
                     className="ml-2"
                   >
-                    {invitation.is_published ? "Published" : "Draft"}
+                    {invitation.is_published ? t('dashboard.published') : t('dashboard.draft')}
                   </Badge>
                 </div>
                 <CardDescription>
@@ -184,7 +186,7 @@ const Dashboard = () => {
                     className="flex-1 transition-romantic"
                   >
                     <Eye className="w-4 h-4 mr-2" />
-                    View
+                    {t('dashboard.view')}
                   </Button>
                   <Button
                     size="sm"
@@ -193,7 +195,7 @@ const Dashboard = () => {
                     className="flex-1 transition-romantic"
                   >
                     <Edit className="w-4 h-4 mr-2" />
-                    Edit
+                    {t('dashboard.edit')}
                   </Button>
                   <Button
                     size="sm"
@@ -213,17 +215,17 @@ const Dashboard = () => {
           <div className="text-center py-12 animate-fade-in-up">
             <Heart className="w-16 h-16 text-muted-foreground mx-auto mb-4 animate-float" />
             <h3 className="text-xl font-wedding-serif text-muted-foreground mb-2">
-              No invitations yet
+              {t('dashboard.noInvitations.title')}
             </h3>
             <p className="text-muted-foreground mb-6">
-              Create your first beautiful wedding invitation
+              {t('dashboard.noInvitations.description')}
             </p>
             <Button
               onClick={() => navigate('/create')}
               className="wedding-button-hover bg-gradient-romantic border-0 text-primary-foreground"
             >
               <Plus className="w-4 h-4 mr-2" />
-              Create Your First Invitation
+              {t('dashboard.noInvitations.button')}
             </Button>
           </div>
         )}
