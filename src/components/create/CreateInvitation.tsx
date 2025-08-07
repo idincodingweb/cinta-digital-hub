@@ -10,16 +10,25 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/components/ui/use-toast';
 import { ArrowLeft, Upload, Heart, Calendar, MapPin, Camera, Music } from 'lucide-react';
-import { useTranslation } from 'react-i18next';
 
 const CreateInvitation = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
   const [bridePhoto, setBridePhoto] = useState<string | null>(null);
   const [groomPhoto, setGroomPhoto] = useState<string | null>(null);
+  const [formData, setFormData] = useState({
+    brideName: '',
+    groomName: '',
+    weddingDate: '',
+    weddingTime: '',
+    venueName: '',
+    venueAddress: '',
+    additionalInfo: '',
+    template: '1',
+    music: '1'
+  });
   const brideFileRef = useRef<HTMLInputElement>(null);
   const groomFileRef = useRef<HTMLInputElement>(null);
 
@@ -28,6 +37,10 @@ const CreateInvitation = () => {
       navigate('/auth');
     }
   }, [user, navigate]);
+
+  const handleInputChange = (field: string, value: string) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+  };
 
   const handlePhotoUpload = async (file: File, type: 'bride' | 'groom') => {
     try {
@@ -51,39 +64,36 @@ const CreateInvitation = () => {
       }
 
       toast({
-        title: t('common.success'),
+        title: "Berhasil",
         description: "Foto berhasil diupload!",
       });
     } catch (error: any) {
       toast({
-        title: t('common.error'),
-        description: t('message.error.uploadPhoto'),
+        title: "Error",
+        description: "Gagal upload foto",
         variant: "destructive"
       });
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>, publish: boolean = false) => {
-    e.preventDefault();
+  const handleSubmit = async (publish: boolean = false) => {
     if (!user) return;
 
     console.log('Starting form submission...');
     setLoading(true);
     
     try {
-      const formData = new FormData(e.currentTarget);
-      
       const invitationData = {
         user_id: user.id,
-        bride_name: formData.get('brideName') as string,
-        groom_name: formData.get('groomName') as string,
-        wedding_date: formData.get('weddingDate') as string,
-        wedding_time: formData.get('weddingTime') as string || null,
-        venue_name: formData.get('venueName') as string || null,
-        venue_address: formData.get('venueAddress') as string || null,
-        additional_info: formData.get('additionalInfo') as string || null,
-        template_id: parseInt(formData.get('template') as string) || 1,
-        music_choice: parseInt(formData.get('music') as string) || 1,
+        bride_name: formData.brideName,
+        groom_name: formData.groomName,
+        wedding_date: formData.weddingDate,
+        wedding_time: formData.weddingTime || null,
+        venue_name: formData.venueName || null,
+        venue_address: formData.venueAddress || null,
+        additional_info: formData.additionalInfo || null,
+        template_id: parseInt(formData.template) || 1,
+        music_choice: parseInt(formData.music) || 1,
         bride_photo_url: bridePhoto,
         groom_photo_url: groomPhoto,
         is_published: publish
@@ -132,64 +142,68 @@ const CreateInvitation = () => {
             className="wedding-button-hover"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
-            {t('create.backToDashboard')}
+            Kembali ke Dashboard
           </Button>
           <div>
             <h1 className="text-4xl font-wedding-serif romantic-text-gradient">
-              {t('create.title')}
+              Buat Undangan Pernikahan
             </h1>
             <p className="text-muted-foreground mt-2">
-              {t('create.description')}
+              Lengkapi informasi di bawah ini untuk membuat undangan pernikahan Anda
             </p>
           </div>
         </div>
 
         {/* Form */}
-        <form onSubmit={(e) => handleSubmit(e, false)} className="space-y-8">
+        <div className="space-y-8">
           {/* Basic Information */}
           <Card className="shadow-soft wedding-card-hover animate-fade-in-up">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 font-wedding-serif">
                 <Heart className="w-5 h-5 text-primary" />
-                {t('create.basicInfo')}
+                Informasi Dasar
               </CardTitle>
             </CardHeader>
             <CardContent className="grid gap-6 md:grid-cols-2">
               <div className="space-y-2">
-                <Label htmlFor="brideName">{t('create.brideName')} *</Label>
+                <Label htmlFor="brideName">Nama Mempelai Wanita *</Label>
                 <Input
                   id="brideName"
-                  name="brideName"
+                  value={formData.brideName}
+                  onChange={(e) => handleInputChange('brideName', e.target.value)}
                   required
                   className="transition-romantic"
                   placeholder="Nama lengkap mempelai wanita"
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="groomName">{t('create.groomName')} *</Label>
+                <Label htmlFor="groomName">Nama Mempelai Pria *</Label>
                 <Input
                   id="groomName"
-                  name="groomName"
+                  value={formData.groomName}
+                  onChange={(e) => handleInputChange('groomName', e.target.value)}
                   required
                   className="transition-romantic"
                   placeholder="Nama lengkap mempelai pria"
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="weddingDate">{t('create.weddingDate')} *</Label>
+                <Label htmlFor="weddingDate">Tanggal Pernikahan *</Label>
                 <Input
                   id="weddingDate"
-                  name="weddingDate"
+                  value={formData.weddingDate}
+                  onChange={(e) => handleInputChange('weddingDate', e.target.value)}
                   type="date"
                   required
                   className="transition-romantic"
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="weddingTime">{t('create.weddingTime')}</Label>
+                <Label htmlFor="weddingTime">Waktu Pernikahan</Label>
                 <Input
                   id="weddingTime"
-                  name="weddingTime"
+                  value={formData.weddingTime}
+                  onChange={(e) => handleInputChange('weddingTime', e.target.value)}
                   type="time"
                   className="transition-romantic"
                 />
@@ -202,36 +216,39 @@ const CreateInvitation = () => {
             <CardHeader>
               <CardTitle className="flex items-center gap-2 font-wedding-serif">
                 <MapPin className="w-5 h-5 text-primary" />
-                {t('create.venue')}
+                Tempat Acara
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="venueName">{t('create.venueName')}</Label>
+                <Label htmlFor="venueName">Nama Tempat</Label>
                 <Input
                   id="venueName"
-                  name="venueName"
+                  value={formData.venueName}
+                  onChange={(e) => handleInputChange('venueName', e.target.value)}
                   className="transition-romantic"
                   placeholder="Contoh: Gedung Serbaguna, Masjid Al-Ikhlas"
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="venueAddress">{t('create.venueAddress')}</Label>
+                <Label htmlFor="venueAddress">Alamat Tempat</Label>
                 <Textarea
                   id="venueAddress"
-                  name="venueAddress"
+                  value={formData.venueAddress}
+                  onChange={(e) => handleInputChange('venueAddress', e.target.value)}
                   className="transition-romantic"
                   placeholder="Alamat lengkap tempat acara"
                   rows={3}
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="additionalInfo">{t('create.additionalInfo')}</Label>
+                <Label htmlFor="additionalInfo">Informasi Tambahan</Label>
                 <Textarea
                   id="additionalInfo"
-                  name="additionalInfo"
+                  value={formData.additionalInfo}
+                  onChange={(e) => handleInputChange('additionalInfo', e.target.value)}
                   className="transition-romantic"
-                  placeholder={t('create.additionalInfoPlaceholder')}
+                  placeholder="Dress code, petunjuk arah, atau pesan khusus..."
                   rows={3}
                 />
               </div>
@@ -243,13 +260,13 @@ const CreateInvitation = () => {
             <CardHeader>
               <CardTitle className="flex items-center gap-2 font-wedding-serif">
                 <Camera className="w-5 h-5 text-primary" />
-                {t('create.photos')}
+                Foto
               </CardTitle>
             </CardHeader>
             <CardContent className="grid gap-6 md:grid-cols-2">
               {/* Bride Photo */}
               <div className="space-y-4">
-                <Label>{t('create.bridePhoto')}</Label>
+                <Label>Foto Mempelai Wanita</Label>
                 <div className="border-2 border-dashed border-primary/30 rounded-lg p-6 text-center space-y-4">
                   {bridePhoto ? (
                     <>
@@ -264,7 +281,7 @@ const CreateInvitation = () => {
                         onClick={() => brideFileRef.current?.click()}
                         className="transition-romantic"
                       >
-                        {t('create.changePhoto')}
+                        Ganti Foto
                       </Button>
                     </>
                   ) : (
@@ -278,7 +295,7 @@ const CreateInvitation = () => {
                         onClick={() => brideFileRef.current?.click()}
                         className="transition-romantic"
                       >
-                        {t('create.uploadPhoto')}
+                        Upload Foto
                       </Button>
                     </>
                   )}
@@ -297,7 +314,7 @@ const CreateInvitation = () => {
 
               {/* Groom Photo */}
               <div className="space-y-4">
-                <Label>{t('create.groomPhoto')}</Label>
+                <Label>Foto Mempelai Pria</Label>
                 <div className="border-2 border-dashed border-primary/30 rounded-lg p-6 text-center space-y-4">
                   {groomPhoto ? (
                     <>
@@ -312,7 +329,7 @@ const CreateInvitation = () => {
                         onClick={() => groomFileRef.current?.click()}
                         className="transition-romantic"
                       >
-                        {t('create.changePhoto')}
+                        Ganti Foto
                       </Button>
                     </>
                   ) : (
@@ -326,7 +343,7 @@ const CreateInvitation = () => {
                         onClick={() => groomFileRef.current?.click()}
                         className="transition-romantic"
                       >
-                        {t('create.uploadPhoto')}
+                        Upload Foto
                       </Button>
                     </>
                   )}
@@ -352,20 +369,20 @@ const CreateInvitation = () => {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 font-wedding-serif">
                   <Heart className="w-5 h-5 text-primary" />
-                  {t('create.template')}
+                  Template
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <Select name="template" defaultValue="1">
+                <Select value={formData.template} onValueChange={(value) => handleInputChange('template', value)}>
                   <SelectTrigger className="transition-romantic">
-                    <SelectValue placeholder={t('create.chooseTemplate')} />
+                    <SelectValue placeholder="Pilih Template" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="1">{t('template.classic')}</SelectItem>
-                    <SelectItem value="2">{t('template.modern')}</SelectItem>
-                    <SelectItem value="3">{t('template.floral')}</SelectItem>
-                    <SelectItem value="4">{t('template.vintage')}</SelectItem>
-                    <SelectItem value="5">{t('template.minimalist')}</SelectItem>
+                    <SelectItem value="1">Klasik</SelectItem>
+                    <SelectItem value="2">Modern</SelectItem>
+                    <SelectItem value="3">Bunga</SelectItem>
+                    <SelectItem value="4">Vintage</SelectItem>
+                    <SelectItem value="5">Minimalis</SelectItem>
                   </SelectContent>
                 </Select>
               </CardContent>
@@ -376,18 +393,18 @@ const CreateInvitation = () => {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 font-wedding-serif">
                   <Music className="w-5 h-5 text-primary" />
-                  {t('create.music')}
+                  Musik
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <Select name="music" defaultValue="1">
+                <Select value={formData.music} onValueChange={(value) => handleInputChange('music', value)}>
                   <SelectTrigger className="transition-romantic">
-                    <SelectValue placeholder={t('create.chooseMusic')} />
+                    <SelectValue placeholder="Pilih Musik Latar" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="1">{t('music.romantic')}</SelectItem>
-                    <SelectItem value="2">{t('music.acoustic')}</SelectItem>
-                    <SelectItem value="3">{t('music.instrumental')}</SelectItem>
+                    <SelectItem value="1">Piano Romantis</SelectItem>
+                    <SelectItem value="2">Gitar Akustik</SelectItem>
+                    <SelectItem value="3">Instrumental</SelectItem>
                   </SelectContent>
                 </Select>
               </CardContent>
@@ -397,23 +414,22 @@ const CreateInvitation = () => {
           {/* Action Buttons */}
           <div className="flex gap-4 justify-end">
             <Button
-              type="submit"
+              onClick={() => handleSubmit(false)}
               variant="outline"
               disabled={loading}
               className="wedding-button-hover"
             >
-              {loading ? t('create.saving') : t('create.saveDraft')}
+              {loading ? "Menyimpan..." : "Simpan Draft"}
             </Button>
             <Button
-              type="button"
-              onClick={(e) => handleSubmit(e as any, true)}
+              onClick={() => handleSubmit(true)}
               disabled={loading}
               className="wedding-button-hover bg-gradient-romantic border-0 text-primary-foreground"
             >
-              {loading ? t('create.saving') : t('create.saveAndPublish')}
+              {loading ? "Menyimpan..." : "Simpan & Publikasikan"}
             </Button>
           </div>
-        </form>
+        </div>
       </div>
     </div>
   );
