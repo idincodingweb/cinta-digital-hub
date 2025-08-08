@@ -9,6 +9,7 @@ import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
 import About from "./pages/About";
 import CreateInvitation from "./pages/CreateInvitation";
+import EditInvitation from "./pages/EditInvitation";
 import InvitationPreview from "./pages/InvitationPreview";
 import NotFound from "./pages/NotFound";
 
@@ -27,6 +28,7 @@ const App = () => (
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/about" element={<About />} />
             <Route path="/create" element={<CreateInvitation />} />
+            <Route path="/edit/:id" element={<EditInvitation />} />
             <Route path="/invitation/:slug" element={<InvitationPreview />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />

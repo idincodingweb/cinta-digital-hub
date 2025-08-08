@@ -14,6 +14,41 @@ export type Database = {
   }
   public: {
     Tables: {
+      guest_messages: {
+        Row: {
+          created_at: string
+          guest_email: string | null
+          guest_name: string
+          id: string
+          invitation_id: string
+          message: string
+        }
+        Insert: {
+          created_at?: string
+          guest_email?: string | null
+          guest_name: string
+          id?: string
+          invitation_id: string
+          message: string
+        }
+        Update: {
+          created_at?: string
+          guest_email?: string | null
+          guest_name?: string
+          id?: string
+          invitation_id?: string
+          message?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "guest_messages_invitation_id_fkey"
+            columns: ["invitation_id"]
+            isOneToOne: false
+            referencedRelation: "wedding_invitations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           created_at: string

@@ -3,8 +3,12 @@ import { useParams } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Heart, Calendar, MapPin, Music } from 'lucide-react';
+import { Heart, Calendar, MapPin } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
+import MessageForm from './MessageForm';
+import MessagesList from './MessagesList';
+import TemplateRenderer from './TemplateRenderer';
+import BackgroundMusic from './BackgroundMusic';
 
 interface WeddingInvitation {
   id: string;
@@ -27,6 +31,7 @@ const InvitationPreview = () => {
   const { toast } = useToast();
   const [invitation, setInvitation] = useState<WeddingInvitation | null>(null);
   const [loading, setLoading] = useState(true);
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
 
   useEffect(() => {
     const fetchInvitation = async () => {
@@ -95,8 +100,19 @@ const InvitationPreview = () => {
     });
   };
 
+  const handleMessageAdded = () => {
+    setRefreshTrigger(prev => prev + 1);
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-soft">
+    <TemplateRenderer 
+      templateId={invitation.template_id} 
+      brideName={invitation.bride_name} 
+      groomName={invitation.groom_name}
+    >
+      {/* Background Music */}
+      <BackgroundMusic musicChoice={invitation.music_choice} />
+      
       {/* Header */}
       <div className="text-center py-16 px-6">
         <div className="animate-fade-in-up">
@@ -203,6 +219,18 @@ const InvitationPreview = () => {
             </Card>
           )}
 
+          {/* Message Form */}
+          <MessageForm 
+            invitationId={invitation.id} 
+            onMessageAdded={handleMessageAdded} 
+          />
+
+          {/* Messages List */}
+          <MessagesList 
+            invitationId={invitation.id} 
+            refreshTrigger={refreshTrigger} 
+          />
+
           {/* Footer */}
           <div className="text-center py-8 animate-fade-in-up">
             <p className="text-lg text-muted-foreground mb-4">
@@ -218,14 +246,7 @@ const InvitationPreview = () => {
           </div>
         </div>
       </div>
-
-      {/* Background Music Icon */}
-      <div className="fixed bottom-6 right-6">
-        <div className="bg-primary/10 backdrop-blur-sm rounded-full p-3 shadow-soft">
-          <Music className="w-6 h-6 text-primary" />
-        </div>
-      </div>
-    </div>
+    </TemplateRenderer>
   );
 };
 
